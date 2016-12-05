@@ -1,6 +1,15 @@
-Password til brugere i ny SQL-dump: cbs
+Installation of the Server.
 
-Good luck, 
-- MathiasLund
+1. Extract files.
+2. Import into IntelliJ or other.
+3. Open "resources" and find "To import.sql".
+4. Import "To import.sql" into af database named "project_eva".
+5. Open "src" and open "Run" and run it.
 
-Over and out.
+Admin login:
+Username: admin@cbs.dk
+Password: cbs
+
+Test user:
+Username: test
+Password: test

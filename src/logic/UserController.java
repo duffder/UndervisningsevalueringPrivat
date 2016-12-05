@@ -1,5 +1,6 @@
 package logic;
 
+import security.Digester;
 import shared.LectureDTO;
 import shared.Logging;
 import shared.ReviewDTO;
@@ -18,6 +19,8 @@ import java.util.Map;
 
 public class UserController {
 
+
+
     public static void main(String[] args) {
         UserController controller = new UserController();
         controller.getCourses(1);
@@ -27,19 +30,26 @@ public class UserController {
     }
 
     public UserDTO login(String cbs_email, String password) {
+        String decryptedEmail = Digester.decrypt(cbs_email);
+        String decryptedPassword = Digester.decrypt(password);
 
         UserDTO user = new UserDTO();
 
+
+        String securedPassword = Digester.hashWithSalt(decryptedPassword);
+
+
         try {
             Map<String, String> params = new HashMap();
-            params.put("cbs_mail", String.valueOf(cbs_email));
-            params.put("password", String.valueOf(password));
+            params.put("cbs_mail", String.valueOf(decryptedEmail));
+            params.put("password", String.valueOf(securedPassword));
 
-            String[] attributes = {"id"};
+            String[] attributes = {"id","type","cbs_mail"};
             ResultSet rs = DBWrapper.getRecords("user", attributes, params, null, 0);
 
             while (rs.next()) {
                 user.setId(rs.getInt("id"));
+                user.setType(rs.getString("type"));
                 System.out.print("User found");
                 return user;
             }
@@ -58,7 +68,7 @@ public class UserController {
 
         try {
             Map<String, String> params = new HashMap();
-            params.put("id", String.valueOf(lectureId));
+            params.put("lecture_id", String.valueOf(lectureId));
             params.put("is_deleted", "0");
             String[] attributes = {"id", "user_id", "lecture_id", "rating", "comment"};
 
@@ -98,7 +108,7 @@ public class UserController {
 
                 lecture.setStartDate(rs.getTimestamp("start"));
                 lecture.setEndDate(rs.getTimestamp("end"));
-                //lecture.setId(rs.getInt("id"));
+                lecture.setLectureId(rs.getInt("id"));
                 lecture.setType(rs.getString("type"));
                 lecture.setDescription(rs.getString("description"));
 

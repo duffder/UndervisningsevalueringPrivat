@@ -31,6 +31,7 @@ public class UserEndpoint {
         ArrayList<LectureDTO> lectures = userCtrl.getLectures(code);
 
         if (!lectures.isEmpty()) {
+
             return successResponse(200, lectures);
         } else {
             return errorResponse(404, "Failed. Couldn't get lectures.");
@@ -92,13 +93,13 @@ public class UserEndpoint {
     protected Response errorResponse(int status, String message) {
 
         return Response.status(status).entity(new Gson().toJson(Digester.encrypt("{\"message\": \"" + message + "\"}"))).build();
-        //return Response.status(status).entity(new Gson().toJson("{\"message\": \"" + message + "\"}")).build());
+        //return Response.status(status).entity(new Gson().toJson("{\"message\": \"" + message + "\"}")).build();
     }
 
     protected Response successResponse(int status, Object data) {
         Gson gson = new Gson();
 
-        return Response.status(status).entity(gson.toJson(Digester.encrypt(gson.toJson(data)))).build();
+        return Response.status(status).entity((Digester.encrypt(gson.toJson(data)))).build();
         //return Response.status(status).entity(gson.toJson(data)).build();
     }
 }
